@@ -1,0 +1,117 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.OrderDetailTemp>
+
+@{
+    var total = Model.Sum(o => o.Value);
+    var totalString = Model.Sum(o => o.Value).ToString("C2");
+    var lenght = Model.Count();
+
+}
+
+<div class="card">
+      <div class="card-header">
+
+
+                <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+                    <h5 class="card-header mb-0 text-gray-800 my-2">Cart</h5>
+                    </div>
+            </div>
+            <div class="card-body">
+         @if(Model.Count() > 0)
+        {
+            <div class="table-responsive text-nowrap mb-6">
+
+                <div class="card">
+                
+                <div class="table-responsive text-nowrap">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th colspan="1"></th>
+                        <th>Name</th>
+                        
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Value</th>
+                        @*<th>Stock</th>*@
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        
+                            @foreach (var order in Model)
+                            {
+                               
+                                <tr>
+                                   <td>
+                                       <img width="50" src="@order.Medicine.ImageFullPath">
+                                   </td>
+                                   <td>@order.Medicine.Name</td>
+
+                                   <td>@order.Medicine.Price.ToString("C2")</td>
+                                   <td>@order.Quantity</td>
+                                   <td>@order.Value.ToString("C2")</td>
+                                   @*<td>@order.Medicine.Stock</td>*@
+                                    @if (!@order.Medicine.NeedsPrescription)
+                                    {
+                                        <td>
+                                            @if(@order.Medicine.Stock <= @order.Quantity)
+                                            {
+                                                    <button disabled class="btn btn-warning"><i class="bx bx-plus" style="font-size: 15px"></i></button>
+                                                } else
+                                                {
+                                                     <a asp-action="Increase" asp-route-id="@order.Id" class="btn btn-warning"><i class="bx bx-plus" style="font-size: 15px"></i></a>
+                                                }
+                                               
+                                            <a asp-action="Decrease" asp-route-id="@order.Id" class="btn btn-primary"><i class="bx bx-minus" style="font-size: 15px"></i></a>
+                                            <a asp-action="DeleteItem" asp-route-id="@order.Id" class="btn btn-danger"><i class="bx bx-trash" style="font-size: 15px"></i></a>
+                                        </td>
+                                    }
+                                    @if(@order.Medicine.NeedsPrescription)
+                                    {
+                                        <td>
+                                            <a asp-action="DeleteItem" asp-route-id="@order.Id" class="btn btn-danger"><i class="bx bx-trash" style="font-size: 15px"></i></a>
+                                        </td>
+                                    }
+                                   
+
+                                    
+
+                                 
+                                </tr>
+                           }
+                     
+                     
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+        </div>
+       
+             <div class="card text-end mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title" style="font-size:30px">Total</h5>
+                      <p class="card-title" style="font-size:20px">@totalString</p>
+                      <a asp-action="CheckOutInfo" class="btn btn-primary">Checkout</a>
+                    </div>
+                  </div>
+        }
+
+        @if(Model.Count() == 0)
+        {
+            <div class="card text-center mb-3">
+                    <div class="card-body">
+                      <h2 class="card-title">Your Cart Is Empty</h2>
+                      
+                      <a asp-action="Index" class="btn btn-primary"><i class="menu-icon tf-icons bx bx-cart"></i>Go Shop</a>
+                    </div>
+            </div>
+        }
+        </div>
+        </div>
+@section Scripts {
+  
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/cr-1.5.6/date-1.1.2/fc-4.1.0/fh-3.2.4/kt-2.7.0/r-2.3.0/rg-1.2.0/rr-1.2.8/sc-2.0.7/sb-1.3.4/sp-2.0.2/sl-1.4.0/sr-1.1.1/datatables.min.js"></script>
+
+}

@@ -1,0 +1,77 @@
+﻿@model Medpharma.Web.Models.CustomerViewModel
+
+
+<h5 class="pb-3">Personal Info</h5>
+<div class="mb-3 col-md-6">
+    <label asp-for="FirstName" class="form-label">First Name</label>
+    <input asp-for="FirstName" type="text" class="form-control" required placeholder="Name">
+    <span asp-validation-for="FirstName" class="text-danger"></span>
+</div>
+<div class="mb-3 col-md-6">
+    <label asp-for="LastName" class="form-label">Last Name</label>
+    <input asp-for="LastName" type="text" class="form-control" required placeholder="Surname">
+    <span asp-validation-for="LastName" class="text-danger"></span>
+</div>
+<div class="mb-3 col-md-2">
+    <label asp-for="Sex" class="form-label">Sex</label>
+    @Html.DropDownList("Sex", new SelectList(Enum.GetValues(typeof(Medpharma.Web.Data.Entities.Sex))), "Select", new { @class = "form-select" })
+    <span asp-validation-for="Sex" class="text-danger"></span>
+</div>
+<div class="mb-3 col-md-2">
+    <label asp-for="Height" class="form-label">Height</label>
+    <input asp-for="Height" type="number" min="1" class="form-control" required placeholder="cm">
+    <span asp-validation-for="Height" class="text-danger"></span>
+</div>
+<div class="mb-3 col-md-2">
+    <label asp-for="Weight" class="form-label">Weight</label>
+    <input asp-for="Weight" type="number" min="1" class="form-control" required placeholder="kg">
+    <span asp-validation-for="Weight" class="text-danger"></span>
+</div>
+<div class="mb-3 col-md-3">
+    <label asp-for="Document" class="form-label">National ID Number</label>
+    <input asp-for="Document" type="text" min="9" maxlength="9" required class="form-control" placeholder="9 digits">
+    <span asp-validation-for="Document" class="text-danger"></span>
+</div>
+<div class="mb-3 col-md-3">
+    <label asp-for="DateOfBirth" class="form-label">Date Of Birth </label>
+    <input asp-for="DateOfBirth" class="form-control" type="date" required id="html5-date-input">
+    <span asp-validation-for="DateOfBirth" type="date" class="text-danger"></span>
+</div>
+<hr />
+<h5 class="pb-3">Contact</h5>
+
+<div class="mb-3 col-md-6">
+    <label asp-for="Email" class="form-label">E-mail</label>
+    <input asp-for="Email" type="email" required class="form-control" placeholder="email@email.com">
+    <span asp-validation-for="Email" type="email" class="text-danger"></span>
+</div>
+
+
+<div class="mb-3 col-md-3">
+    <label asp-for="PhoneNumber" class="form-label">Phone</label>
+    <input asp-for="PhoneNumber" type="text" min="9" required maxlength="9" class="form-control" placeholder="912345678">
+    <span asp-validation-for="PhoneNumber" type="number" class="text-danger"></span>
+</div>
+<div class="mb-3 col-md-12">
+    <label asp-for="Address" class="form-label">Address</label>
+    <input asp-for="Address" type="text" class="form-control" required placeholder="Street, Avenue, Alley...">
+    <span asp-validation-for="Address" type="text" class="text-danger"></span>
+</div>
+<hr />
+<h5 class="pb-3">Medical History</h5>
+<div class="mb-3 col-md-12">
+    <label asp-for="MedicalInfo" class="form-label">Any information you find relevant</label>
+    <textarea asp-for="MedicalInfo" class="form-control text-left bg-white" id="exampleFormControlTextarea1" rows="5" 
+        placeholder="Ex: Allergies, Deseases, Operations, Disabilities...">
+    </textarea>
+</div>
+<div class="mb-3 col-md-3">
+    <label asp-for="HasInsurance" class="form-check-label form-label">Do you have any medical Insurance?</label>
+    <div class="mb-3 col-md-4 d-flex" style="padding-top: 10px; padding-left: 30px">
+        <input asp-for="HasInsurance" type="checkbox" class="form-check-input form-control">
+        <label>&nbsp;Yes</label>
+    </div>
+    <span asp-validation-for="HasInsurance" class="text-danger"></span>
+</div>
+<hr />
+<p>Disclaimer: By clicking 'Confirm' all information given above will be considerated truthful.</p>

@@ -1,0 +1,38 @@
+﻿@model Medpharma.Web.Models.EditProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<form id="form1" asp-action="EditProfile" method="POST" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card mb-4">
+        <h5 class="card-header">My Profile</h5>
+        <hr class="my-0">
+        <div class="card-body">
+            <div class="mb-3 col-md-6">
+                <label asp-for="FirstName" class="form-label">First Name</label>
+                <input asp-for="FirstName" type="text" class="form-control" >
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-md-6">
+                <label asp-for="LastName" class="form-label">Last Name</label>
+                <input asp-for="LastName" type="text" class="form-control" >
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+                <a asp-action="Index" asp-controller="Dashboard" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+    {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

@@ -1,0 +1,126 @@
+﻿@model Medpharma.Web.Data.Entities.MedicalScreening
+@{
+    ViewData["Title"] = "Details";
+
+   
+}
+
+<style>
+    textarea {
+  resize: none;
+}
+
+.bg-success-lbl {
+        background-color: rgba(0, 230, 64, .5); 
+    }
+
+    .bg-alarming-lbl {
+        background-color: rgba(248,225,74);
+    }
+ 
+
+    .bg-critical-lbl {
+        background-color: rgba(249, 105, 14,  .5); 
+    }
+
+    .bg-high-lbl {
+        background-color: rgba(242, 38, 19,  .5); 
+    }
+</style>
+
+
+<div class="card mb-4">
+    <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-white">Medical Screening Details</h5>
+    </div>
+                <div class="card-body">
+                  <div class="table-responsive text-nowrap py-3">
+                    <table class="table">
+                      <thead>
+                           <tr>
+                              <th>Registered </th>
+                        <th colspan="5"><strong>@Html.DisplayFor(model => model.Time)</strong></th>
+                          </tr>
+                        <tr class="bg-lighter">
+                        <th>Full Name</th>
+                        <th>Citizen ID</th>
+                        <th>Speciality</th>
+                        <th>Priority</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                            <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.FullName)</label>
+                            <strong></strong>
+                          </td>
+                          <td>
+                              
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Document)</label>
+                              
+                              </td>
+                            <td>
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Speciality.Name)</label>
+                            </td>
+                          
+
+                            @if(@Model.Priority.Name == "Low")
+                            {
+                                <td><span class="badge bg-success-lbl me-1">@Model.Priority.Name</span></td>
+                                
+                            }
+
+                            @if(@Model.Priority.Name == "Alarming")
+                            {
+                               <td>
+                                   <label class="badge bg-alarming-lbl  me-1" readonly="">@Html.DisplayFor(model => model.Priority.Name)</label>
+                               </td>
+
+                            }
+
+                             @if(@Model.Priority.Name == "Critical")
+                            {
+                               <td><label class="badge bg-critical-lbl  me-1" readonly="">@Html.DisplayFor(model => model.Priority.Name)</label></td>
+                            }
+
+                             @if(@Model.Priority.Name == "Highest")
+                            {
+                               <td><label class="badge bg-high-lbl  me-1" readonly="">@Html.DisplayFor(model => model.Priority.Name)</label></td>
+                            }
+                        
+                          
+                        </tr>
+                        <tr class="bg-lighter">
+                          <th>Sex</th>
+                          <th>DATE OF BIRTH</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Sex)</label>
+                            </td>
+                            <td>
+                               
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.DateOfBirth)</label>
+                            </td>
+                            <td></td>
+                             <td></td>
+                        </tr>
+                        <tr class="bg-lighter">
+                          <th colspan="5">Observations</th>
+                        </tr>
+                        <tr>
+                        <td colspan="12">
+                            <textarea asp-for="Observations" readonly class="form-control bg-white" rows="5">@Html.DisplayFor(model => model.Observations)</textarea>
+                        </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="mb-3 pt-3">
+                    <a asp-action="Registered" class="btn btn-primary">Back</a>
+                  </div>
+                </div>
+              </div>

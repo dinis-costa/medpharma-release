@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.Clerk>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready( function () {
+            $('#tableCustomers').DataTable();
+            } );
+    </script>
+}
+
+
+
+    <div class="card">
+        <div class="card-header">
+
+            <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+                <h5 class="card-header mb-0 text-gray-800 my-2">Clerks</h5>
+                <a asp-action="Create" class="btn btn-success btn-sm d-none d-sm-inline-block">Add New</a>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+
+                <table class="table" id="tableCustomers">
+                    <thead>
+                        <tr>
+                            <th scope="col">@Html.DisplayNameFor(model => model.FullName)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Email)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Document)</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-border-bottom-0">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.FullName)</strong></td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Document)</td>
+                                <td class="text-center">
+                                    <div class="dropdown">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

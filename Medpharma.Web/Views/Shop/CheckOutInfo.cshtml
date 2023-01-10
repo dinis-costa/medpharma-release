@@ -1,0 +1,131 @@
+﻿
+@model Medpharma.Web.Models.CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+
+    var total = Model.OrderDetailTempList.Sum(o => o.Value);
+    var totalString = Model.OrderDetailTempList.Sum(o => o.Value).ToString("C2");
+}
+
+
+<div class="card">
+      <div class="card-header">
+        <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+            <h5 class="card-header mb-0 text-gray-800 my-2">Checkout</h5>
+        </div>
+      </div>
+      <div class="card-body">
+          <div>
+              <div class="card mb-4">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                      <h3 class="mb-0">Invoice data</h3>
+                      
+                    </div>
+                    <div class="card-body">
+                      
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Name</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-fullname2" class="input-group-text"><i class="bx bx-user"></i></span>
+                              <input readonly type="text" class="form-control bg-white" id="basic-icon-default-fullname" value="@Model.Customer.FullName" aria-label="John Doe" aria-describedby="basic-icon-default-fullname2">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-default-name">Document</label>
+                          <div class="col-sm-10">
+                            <input readonly type="text" value="@Model.Customer.Document" class="form-control bg-white" id="basic-default-name">
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-email">Email</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                              <input readonly type="text" id="basic-icon-default-email" class="form-control bg-white" value="@Model.Customer.UserName"  aria-label="john.doe" aria-describedby="basic-icon-default-email2">
+                              <span id="basic-icon-default-email2" class="input-group-text"></span>
+                            </div>
+                            
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 form-label" for="basic-icon-default-phone">Phone No</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-phone2" class="input-group-text"><i class="bx bx-phone"></i></span>
+                              <input readonly type="text" id="basic-icon-default-phone" class="form-control phone-mask bg-white" value="@Model.Customer.PhoneNumber" aria-label="658 799 8941" aria-describedby="basic-icon-default-phone2">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 form-label" for="basic-icon-default-phone">Address</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-company2" class="input-group-text"><i class="bx bx-buildings"></i></span>
+                              <input readonly type="text" id="basic-icon-default-phone" class="form-control  bg-white" value="@Model.Customer.Address" aria-describedby="basic-icon-default-phone2">
+                            </div>
+                          </div>
+                        </div>
+                       
+                       
+
+                
+                
+                <div style="margin-top:100px;" class="table-responsive text-nowrap">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Prescription</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Value</th>
+                     
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        
+                            @foreach (var order in Model.OrderDetailTempList)
+                            {
+                               
+                                <tr>
+                                   <td>
+                                       <img width="50" src="@order.Medicine.ImageFullPath">
+                                   </td>
+                                   <td>@order.Medicine.Name</td>
+                                   <td>
+                                    @if(@order.Medicine.NeedsPrescription)
+                                    {
+                                        <p style="font-size: 10px" class="badge bg-label-danger">Required</p>                                             
+                                    }
+                                   </td>
+                                   <td>@order.Medicine.Price.ToString("C2")</td>
+                                   <td>@order.Quantity</td>
+                                   <td>@order.Value.ToString("C2")</td>
+                                   
+                                </tr>
+                           }
+                     
+                     
+                    </tbody>
+                  </table>     
+                </div>
+                <div class=" text-end mb-3" style="margin-top:100px;">
+                    <div>
+                      <h5 class="card-title" style="font-size:30px">Total</h5>
+                      <p class="card-title" style="font-size:20px">@totalString</p>
+                    </div>
+                  </div>
+            
+                      <div class="d-grid gap-2 col-lg-6 mx-auto" style="margin-top:100px;">
+                          <a asp-controller="Stripe"  asp-route-appointmentId="0" asp-route-origin="2" asp-action="Index" asp-route-totalPayment="@total" class="btn btn-primary btn-lg" type="button">Payment</a>
+                         
+                        </div>
+                   
+                    </div>
+                  </div>
+          </div>
+      </div>
+</div>

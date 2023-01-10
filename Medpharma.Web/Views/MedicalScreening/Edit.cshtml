@@ -1,0 +1,183 @@
+﻿@model Medpharma.Web.Models.MedicalScreeningViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .bg-yellow {
+        background-color: yellow;
+
+    }
+
+    .bg-success-lbl {
+        background-color: rgba(0, 230, 64, .5); 
+    }
+
+    .bg-alarming-lbl {
+        background-color: rgba(248,225,74);
+    }
+ 
+
+    .bg-critical-lbl {
+        background-color: rgba(249, 105, 14,  .5); 
+    }
+
+    .bg-high-lbl {
+        background-color: rgba(242, 38, 19,  .5); 
+    }
+</style>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-white">Edit Medical Screening</h5>
+    </div>
+        <div class="card-body">
+                    <div class="card-body">
+                        <div class="accordion mt-3 mb-3 " id="accordionExample">
+                    <div class="card accordion-item active">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne">
+                          Patient Details
+                        </button>
+                      </h2>
+
+                      <div id="accordionOne" class="accordion-collapse collapse " data-bs-parent="#accordionExample" style="">
+                        <div class="accordion-body">
+                             <div class="table-responsive text-nowrap">
+                    <table class="table">
+                      <thead>
+                           <tr>
+                              <th>Registered </th>
+                        <th colspan="5"><strong>@Html.DisplayFor(model => model.Time)</strong></th>
+                          </tr>
+                        <tr class="bg-lighter">
+                        <th>Full Name</th>
+                        <th>Citizen ID</th>
+                        <th>Speciality</th>
+                        <th>Priority</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                            <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.FullName)</label>
+                            <strong></strong>
+                          </td>
+                          <td>
+                              
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Document)</label>
+                              
+                              </td>
+                            <td>
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Speciality.Name)</label>
+                            </td>
+                          
+
+                               @if(@Model.Priority.Name == "Low")
+                            {
+                                <td><span class="badge bg-success-lbl me-1">@Model.Priority.Name</span></td>
+                                
+                            }
+
+                            @if(@Model.Priority.Name == "Alarming")
+                            {
+                               <td>
+                                   <label class="badge bg-alarming-lbl  me-1" readonly="">@Html.DisplayFor(model => model.Priority.Name)</label>
+                               </td>
+
+                            }
+
+                             @if(@Model.Priority.Name == "Critical")
+                            {
+                               <td><label class="badge bg-critical-lbl  me-1" readonly="">@Html.DisplayFor(model => model.Priority.Name)</label></td>
+                            }
+
+                             @if(@Model.Priority.Name == "Highest")
+                            {
+                               <td><label class="badge bg-high-lbl  me-1" readonly="">@Html.DisplayFor(model => model.Priority.Name)</label></td>
+                            }
+                        
+                          
+                        </tr>
+                                        <tr class="bg-lighter">
+                                            <th>Sex</th>
+                                            <th>DATE OF BIRTH</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                        <tr>
+                            <td>
+                              
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Sex)</label>
+                            </td>
+                            <td>
+                               
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.DateOfBirth)</label>
+                            </td>
+                            <td></td>
+                             <td></td>
+                        </tr>
+                        <tr class="bg-lighter">
+                          <th colspan="5">Observations</th>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <textarea asp-for="Admission.Notes" readonly class="form-control bg-white" rows="5">@Html.DisplayFor(model => model.Admission.Notes)  </textarea>
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                        </div>
+                      </div>
+                    </div>
+                   
+                   
+                  </div>
+                  
+                      <form id="form1" method="post" asp-controller="MedicalScreening" asp-action="Edit">
+                          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                          <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                          <input type="hidden" asp-for="AdmissionId" value="@Model.Admission.Id" />
+                       
+                      <div class=" form-group mb-3">
+                     
+                        <label asp-for="SId" class="control-label"></label>
+                        <select asp-for="SId" asp-items="Model.Specialities" class="form-select form-select-lg mb-3"></select>
+                        <span asp-validation-for="SId" class="text-danger"></span>
+                        
+                      </div>
+
+                       <div class=" form-group mb-3">
+                     
+                        <label asp-for="PId" class="control-label"></label>
+                        <select asp-for="PId" asp-items="Model.Priorities" class="form-select form-select-lg mb-3"></select>
+                        <span asp-validation-for="PId" class="text-danger"></span>
+                        
+                      </div>
+                       
+                        <div class=" mb-3">
+                          <label class="form-label" for="basic-default-message">Observations</label>
+                          <textarea
+                              asp-for="Observations"
+                              rows="10" style="height:100%;"
+                            id="basic-default-message"
+                            class="form-control"
+                           
+                          ></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                        <a asp-action="Registered" class="btn btn-outline-secondary">Back</a>
+                      </form>
+
+                    </div>
+                  </div>
+           
+  </div>   
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+}

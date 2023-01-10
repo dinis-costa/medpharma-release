@@ -1,0 +1,52 @@
+﻿@model Medpharma.Web.Models.PrescriptionViewModel
+
+@{
+    ViewData["Title"] = "Prescription";
+}
+
+<form id="form1" asp-action="CreateMedicinePrescription" method="POST" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="AppointmentId" />
+
+    <div class="card mb-4">
+        <h5 class="card-header bg-primary text-white">New Prescription</h5>
+        <hr class="my-0">
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="mb-3 col-md-4">
+                    <label asp-for="MedicineList">Medicine List</label>
+                    @Html.DropDownList("MedicineId", new SelectList((System.Collections.IEnumerable)ViewData["Medicines"], "Id", "Name"), "(Select a Medicine...)", new { @class = "form-select" })
+                    <span asp-validation-for="MedicineId"></span>
+                </div>
+                <div class="mb-3 col-md-1">
+                    <label asp-for="Quantity"></label>
+                    <input asp-for="Quantity" min="1" class="form-control" />
+                </div>
+                
+            </div>
+
+            <div class="row">
+
+                <label asp-for="Observations"></label>
+                <div class="mb-3 col-md-8">
+
+                    <textarea asp-for="@Model.Observations" class="form-control text-left bg-white" id="exampleFormControlTextarea1" rows="5">
+                       
+                    </textarea>
+
+                </div>
+
+            </div>
+            <hr />
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary me-2">Submit</button>
+                <button href="##" onClick="history.go(-1); return false;" class="btn btn-outline-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+

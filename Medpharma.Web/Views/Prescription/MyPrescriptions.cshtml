@@ -1,0 +1,295 @@
+﻿@model Medpharma.Web.Models.FillPrescriptionViewModel
+@{
+    ViewData["Title"] = "Prescription";
+
+   
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+            <h5 class="card-header mb-0 text-gray-800 my-2">My Prescription</h5>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive text-nowrap">
+
+                <table class="table" id="tableCustomers">
+                    <thead>
+                        <tr>
+                            <th scope="col">Doctor</th>
+                            <th scope="col">Speciality</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Remaining</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-border-bottom-0">
+                    @foreach (var appointment in Model.Appointments)
+                    {
+                        <tr>
+                            <td>@appointment.Doctor.FullName</td>
+                            <td>@appointment.Speciality.Name</td>
+                            <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
+                            <td></td>
+                            <td class="text-center">
+                                <div class="d-grid gap-2 col-lg-6 mx-auto">
+                                    @if(@appointment.PrescriptionsFilled == 1)
+                                    {
+                                        <div onclick="openModel(@appointment.Id)"  class="btn btn-danger text-white  mb-1">Filled</div>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary btn-sm text-white btn-lg" onclick="openModel(@appointment.Id)" >
+                                            Fill Prescription
+                                        </button>
+                                    }
+                                </div>
+
+                                <div class="modal fade show" id="largeModal-@appointment.Id" tabindex="-10" role="dialog" style="display:none;" >
+                                    <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel3">Prescription</h5>
+                              <button onclick="closeModal(@appointment.Id)" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                             <div class="card">
+                <h5 class="card-header">Medicines</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table">
+                    <thead>
+                      
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th></th>
+                        <th>Prescrition</th>
+                      
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @foreach (var medicine in @appointment.Prescriptions)
+                       {
+                         if (medicine.MedicineId != null)
+                         {
+                            <tr>
+                                <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@medicine.Medicine.Name</strong></td>
+                                <td>@medicine.Medicine.Description</td>
+                                <td>@medicine.Quantity</td>
+                                <td>
+
+                                    <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="" data-bs-original-title="">
+                                        <img src="@medicine.Medicine.ImageFullPath" alt="Avatar" class="rounded-circle">
+                                    </div>
+
+                                </td>
+                                <td class="text-center">
+                                    @if (@medicine.Medicine.NeedsPrescription)
+                                    {
+                                        <p style="font-size: 10px" class="badge bg-label-danger">Required</p>
+                                    }
+                                </td>
+                                <td>
+                                    <p>@medicine.Medicine.Price.ToString("C2")</p>
+                                </td>
+
+                            </tr>
+                        }
+                           
+                           
+                       }
+                      
+                     
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button onclick="closeModal(@appointment.Id)" type="button" class="btn btn-outline-secondary">
+                                Close
+                              </button>
+                              @if(@appointment.PrescriptionsFilled != 1)
+                                {
+                                    <a asp-controller="Shop" asp-action="CheckOutPrescriptionInfo" asp-route-appointmentId="@appointment.Id" asp-route-prescriptionType="standard" type="submit" class="btn btn-primary">Checkout</a>    
+                                }
+                                                
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                          </td>
+                          
+                        </tr>
+                        
+                         
+                    }
+                   @if(Model.AppointmentsRemaining.Count > 0)
+                    {
+                        @foreach (var remaining in Model.AppointmentsRemaining)
+                       {
+                           <tr>
+                             <td>@remaining.Doctor.FullName</td>
+                            <td>@remaining.Speciality.Name</td>
+                            <td>@remaining.Date.ToString("dd/MM/yyyy")</td>
+                             <td>
+                                 @if(@remaining.IsRemaining == 1)
+                                    {
+                                        <p style="font-size: 10px" class="badge bg-label-danger">Remaining</p>
+                                    }
+                                </td>
+                            <td>
+                               
+                                <div class="d-grid gap-2 col-lg-6 mx-auto">
+                                    @if(@remaining.PrescriptionsFilled == 1)
+                                    {
+                                        <div onclick="openModelRem(@remaining.Id)" class="btn btn-danger text-white  mb-1">Filled</div>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-primary text-white " onclick="openModelRem(@remaining.Id)" >
+                                            Fill Prescription
+                                        </button>
+                                    }
+
+
+                                    
+                                <div class="modal fade show" id="largeModal-rem-@remaining.Id" tabindex="-10" role="dialog" style="display:none;" >
+                        <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel3">Remaining Prescription</h5>
+                              <button onclick="closeModalRem(@remaining.Id)" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                             <div class="card">
+                <h5 class="card-header">Medicines</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table">
+                    <thead>
+                      
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Prescrition</th>
+                      
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @foreach (var medicine in @remaining.PrescriptionRemaining)
+                       {
+                         
+                           <tr>
+                                <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@medicine.Medicine.Name</strong></td>
+                                <td>@medicine.Medicine.Description</td>
+                                <td>@medicine.Quantity</td>
+                                <td>
+                          
+                                    <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="" data-bs-original-title="Lilian Fuller">
+                                      <img src="@medicine.Medicine.ImageFullPath" alt="Avatar" class="rounded-circle">
+                                    </div>
+                            
+                                </td>
+                                <td>
+                                    @if(@medicine.Medicine.NeedsPrescription)
+                                    {
+                                        <p style="font-size: 10px" class="badge bg-label-danger">Required</p>                                             
+                                    }
+                                                                           </td>
+                                <td>
+                                    <p>@medicine.Medicine.Price</p>
+                                </td>
+                                
+                            </tr>
+                           
+                       }
+                      
+                     
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button onclick="closeModalRem(@remaining.Id)" type="button" class="btn btn-outline-secondary">
+                                Close
+                              </button>
+                               @if(@remaining.PrescriptionsFilled != 1)
+                                {
+                                    <a asp-controller="Shop" asp-action="CheckOutPrescriptionInfo" asp-route-appointmentId="@remaining.Id" asp-route-prescriptionType="remaining" type="submit" class="btn btn-primary ">Checkout</a>    
+                                }
+                                                        
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                                    
+                                </div>
+                     </tr>
+                       }
+                    
+                    }
+                    
+                </tbody>
+            </table>
+        </div>
+        </div>
+
+</div>
+
+
+
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+
+    <script>
+        $(document).ready( function () {
+            $('#tableCustomers').DataTable();
+            } );
+
+        function openModel(id) {
+            let modal = document.getElementById("largeModal-" + id);
+            
+            if ( modal.style.display === "none") {
+             modal.style.display = "block";
+          } else {
+             modal.style.display = "none";
+          }
+        }
+
+        
+
+        function closeModal(id) {
+            let modal = document.getElementById("largeModal-" + id);
+            modal.style.display = "none";
+        }
+
+
+        function openModelRem(id) {
+            let modal = document.getElementById("largeModal-rem-" + id);
+            
+            if ( modal.style.display === "none") {
+             modal.style.display = "block";
+          } else {
+             modal.style.display = "none";
+          }
+        }
+
+        function closeModalRem(id) {
+            let modal = document.getElementById("largeModal-rem-" + id);
+            modal.style.display = "none";
+        }
+
+    </script>
+}

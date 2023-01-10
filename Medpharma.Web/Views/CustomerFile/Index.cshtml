@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.CustomerFile>
+@section Scripts
+    {
+    @{
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#tableCustomers').DataTable();
+        });
+    </script>
+}
+
+    <div class="card">
+        <div class="card-header">
+
+            <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+                <h5 class="card-header mb-0 text-gray-800 my-2">Customer Files</h5>
+                @if (ViewBag.From == "Index")
+                {
+                <a asp-action="Create" class="btn btn-primary btn-sm d-none d-sm-inline-block">Add File</a>
+                }
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+
+                <table class="table" id="tableCustomers">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Description)</th>
+                            <th scope="col">Date</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.Description)</strong></td>
+                            <td>@Html.DisplayFor(modelItem => item.TimeStamp)</td>
+                            <td class="text-center">
+                                <a value="Download" asp-action="Download" asp-controller="CustomerFile" asp-route-id="@item.Id" class="btn btn-warning btn-sm mb-1">&nbsp;<i class="bx bx-download me-1"></i></a>
+
+                                @if (item.Type == 1)
+                                {
+                                    <a value="Delete" asp-action="Delete" asp-controller="CustomerFile" asp-route-id="@item.Id" class="btn btn-danger btn-sm mb-1">&nbsp;<i class="bx bx-trash me-1"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

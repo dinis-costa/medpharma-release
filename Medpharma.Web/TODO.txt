@@ -1,0 +1,11 @@
+﻿- Fix Login Redirect After Register.
+
+- Make tables more responsive and change height.
+
+- Prevent multiple submits on click on some forms:
+
+$('form').submit(function () {
+            if ($(this).valid()) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });

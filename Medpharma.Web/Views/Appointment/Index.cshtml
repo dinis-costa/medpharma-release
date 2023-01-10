@@ -1,0 +1,308 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.Appointment>
+@section Scripts
+    {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#tableCustomers').DataTable();
+        });
+
+        // Date Filter
+        $('#dateFilter').change(function () {
+            console.log('Submiting form...');
+            $('#dateFilterForm').submit();
+        });
+
+        $(document).ready(function () {
+            var id = 0;
+
+            $("a[id*=btnDeleteItem]").click(function () {
+                //debugger;
+                id = $(this).parent()[0].id;
+                $("#deleteDialog").modal("show");
+                return false;
+            });
+
+            $("#btnNoDelete").click(function () {
+                $("#deleteDialog").modal("hide");
+                return false;
+            });
+
+            $("#btnYesDelete").click(function () {
+                window.location.href = "/Appointment/Delete/" + id;
+            });
+        });
+
+    </script>
+}
+    <div class="card">
+        <div class="card-header">
+
+            <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+                <h5 class="card-header mb-0 text-gray-800 my-2">Appointments</h5>
+
+                <form asp-controller="Appointment" asp-action="GetAppointmentsAsync" method="post" id="dateFilterForm">
+                    <input name="date" id="dateFilter" class="form-control" type="date" value="@ViewData["FilteredDate"]">
+                </form>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class=" text-nowrap">
+
+                <table class="table" id="tableCustomers">
+                    <thead>
+                        <tr>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Customer)</th>
+                            @if(!User.IsInRole("Doctor"))
+                            {
+                                <th scope="col">@Html.DisplayNameFor(model => model.Doctor)</th>
+
+                                <th scope="col">Speciality</th>
+                            }
+                            <th scope="col" class="text-center">@Html.DisplayNameFor(model => model.Date)</th>
+                            <th scope="col" class="text-center">Time</th>
+                            <th class="text-center">Status</th>
+                           
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-border-bottom-0">
+                    @foreach (var @item in Model)
+                    {
+                        <tr>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.Customer.FullName)</strong></td>
+
+                            @if (!User.IsInRole("Doctor"))
+                            {
+                                <td>@Html.DisplayFor(modelItem => item.Doctor.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Speciality.Name)</td>
+                            }
+
+                            <td class="text-center">@Html.DisplayFor(modelItem => item.Date)</td>
+
+                            @if (item.MedicalScreeningId != null)
+                            {
+                                <td class="text-center">
+                                    <span class="badge bg-label-info text-info">EMERGENCY</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.Timeslot.Slot)
+                                </td>
+                            }
+                            
+                            @if(User.IsInRole("Customer"))
+                            {
+                                if(!item.Finished)
+                                {
+                                    <td class="text-center">
+                                        <span class="badge bg-label-warning text-warning">SCHEDULED</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                            <div class="dropdown-menu" id="@item.Id">
+                                                <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+
+                                                @*@if ((item.Date.Day - DateTime.Now.Day) > 3)
+                                                {*@
+                                                    <a asp-action="Edit" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                    <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item" id="btnDeleteItem"><i class='bx bx-minus-circle'></i> Cancel</a>
+                                                @*}*@
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                if(item.Finished)
+                                {
+                                    if(!item.IsPaid)
+                                    {
+                                        <td class="text-center">
+                                            <span class="badge bg-label-info text-info">PENDING PAYMENT</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+
+                                                    <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                    <a asp-action="Index" asp-controller="Stripe" asp-route-appointmentId="@item.Id" asp-route-totalPayment="@item.Price" asp-route-origin="4" class="dropdown-item"><i class="bx bx-wallet me-1"></i> Pay</a>   
+                                                    <a asp-action="Appointment" asp-controller="CustomerFile" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-file me-1"></i> Files</a>
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                    else if(item.IsPaid)
+                                    {
+                                        <td class="text-center">
+                                            <span class="badge bg-label-success text-success">COMPLETED</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                    <a asp-action="Appointment" asp-controller="CustomerFile" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-file me-1"></i> Files</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                }
+                            }
+                            else if(User.IsInRole("Clerk") || User.IsInRole("Admin"))
+                            {
+                                if (!item.Finished)
+                                {
+                                    <td class="text-center">
+                                        <span class="badge bg-label-warning text-warning">SCHEDULED</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu" id="@item.Id">
+                                                <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                @if (User.IsInRole("Clerk"))
+                                                {
+                                                    <a asp-action="Edit" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                }
+                                                @*<form asp-action="Delete" asp-controller="Appointment" asp-route-id="@item.Id" method="post">*@
+                                                    <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item" id="btnDeleteItem"><i class='bx bx-minus-circle'></i> Cancel</a>
+                                                @*</form>*@
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                if (item.Finished)
+                                {
+                                    if (!item.IsPaid)
+                                    {
+                                        <td class="text-center">
+                                            <span class="badge bg-label-info text-info">PENDING PAYMENT</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+
+                                                    <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                    <a asp-action="Appointment" asp-controller="CustomerFile" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-file me-1"></i> Files</a>
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                    else if (item.IsPaid)
+                                    {
+                                        <td class="text-center">
+                                            <span class="badge bg-label-success text-success">COMPLETED</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                    <a asp-action="Appointment" asp-controller="CustomerFile" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-file me-1"></i> Files</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                }
+                            }
+                            else if (User.IsInRole("Doctor"))
+                            {
+                                if (!item.Finished)
+                                {
+                                    @if (item.Date.Date == DateTime.Now.Date)
+                                    {
+                                        <td class="text-center">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success"> START </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center">
+                                            <span class="badge bg-label-warning text-warning">SCHEDULED</span>
+                                        </td>
+                                    }
+                                    
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+@*                                                <a asp-action="Delete" asp-controller="Appointment" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-minus-circle me-1"></i> Cancel</a>*@
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                if (item.Finished)
+                                {
+                                    <td class="text-center">
+                                        <span class="badge bg-label-danger text-danger">FINISHED</span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                <a asp-action="Appointment" asp-controller="CustomerFile" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-file me-1"></i> Files</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!--Modal-->
+            <div id="deleteDialog" class="modal fade">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title text-danger">Cancel Appointment</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5 class="text-center">Are you sure?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="btnYesDelete">Yes, Cancel</button>
+                            <button type="button" class="btn btn-outline-secondary" id="btnNoDelete">No, go back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Modal-->
+
+        </div>
+    </div>
+</div>

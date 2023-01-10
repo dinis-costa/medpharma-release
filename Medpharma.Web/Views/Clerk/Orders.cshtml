@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.Order>
+
+@{
+    ViewData["Title"] = "Orders";
+
+   
+}
+
+
+<div class="card">
+            <div class="card-header">
+
+
+                <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+                    <h5 class="card-header mb-0 text-gray-800 my-2">Orders</h5>
+                    </div>
+            </div>
+
+ 
+
+ <div class="card-body">
+            <div class="table-responsive text-nowrap">
+
+                <table class="table" id="tableCustomers">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nº</th>
+                            <th scope="col">Customer</th>
+                            
+                            <th scope="col">Date</th>
+                            
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-border-bottom-0">
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+
+                           <td>@order.Id</td>
+                           <td>@order.Customer.Document</td>
+                           
+                           <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                           <td>
+                               @if(order.OrderSent == 1)
+                                {
+                                    <span class="badge bg-label-success me-1">Dispatched</span>
+                                }
+
+                                @if(order.OrderSent == 0)
+                                {
+                                    <span class="badge bg-label-warning me-1">New Order</span>
+                                }
+                            </td>
+                           
+                           
+                           <td>
+                               <a asp-action="OrderDetails" asp-route-orderId="@order.Id" class="btn btn-primary">Details</a>
+                           </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+
+    <script>
+        $(document).ready( function () {
+            $('#tableCustomers').DataTable();
+            } );
+
+    </script>
+}

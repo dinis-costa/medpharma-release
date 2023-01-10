@@ -1,0 +1,110 @@
+﻿@model Medpharma.Web.Models.StripeFormViewModel
+@section Scripts
+{
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+
+<link rel="stylesheet" href="~/css/payment-form.css" />
+
+<div class="container bg-light d-md-flex align-items-center">
+    <div class="card box1 shadow-sm p-md-5 p-md-5 p-4"> 
+            <div class="fw-bolder mb-4"><span class="fas fa-dollar-sign"></span><span class="ps-1">@Convert.ToDecimal(Model.TotalPayment).ToString("C2")</span></div>
+        <div class="d-flex flex-column"> 
+            
+            <div class="d-flex align-items-center justify-content-between text mb-4">
+                <span>Total</span>
+                <span class="fas fa-dollar-sign">
+                    <span class="ps-1">@Convert.ToDecimal(Model.TotalPayment).ToString("C2")</span>  
+                </span>
+                    
+            </div> 
+                <div class="border-bottom mb-4"></div>
+                <div class="d-flex flex-column mb-4"> 
+                    <span class="far fa-file-alt text">
+                        <span class="ps-2">Invoice ID:</span>
+                    </span> 
+                    <span class="ps-3">SN8478042099</span>
+            </div>
+        </div> 
+    </div> 
+
+<div class="card box2 shadow-sm">
+    <div class="d-flex align-items-center justify-content-between p-md-5 p-4">
+        <span class="h5 fw-bold m-0">Payment medpharma</span>        
+    </div> 
+
+    <ul class="nav nav-tabs mb-3 px-md-4 px-2"> 
+        <li class="nav-item"> 
+            <a class="nav-link px-2 active" aria-current="page" href="#">Credit Card</a>
+        </li> 
+    </ul> 
+
+    <div class="px-md-5 px-4 mb-4 d-flex align-items-center"></div> 
+
+    <form method="post" asp-action="Payment">
+         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" name="Origin" value="@Model.Origin" />
+        <input type="hidden" name="AppointmentId" value="@Model.AppointmentId" />
+        <input type="hidden" name="TotalPayment" value="@Model.TotalPayment" />
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex flex-column px-md-5 px-4 mb-4"> 
+                        <span>Credit Card</span> <div class="inputWithIcon"> 
+                            <input class="form-control" asp-for="CardNumber" type="text" />
+                            
+                            <span class=""> <img class="pay-logo" src="https://www.freepnglogos.com/uploads/mastercard-png/mastercard-logo-logok-15.png" alt=""></span>
+                    </div> 
+                    <span asp-validation-for="CardNumber" class="text-danger"></span>
+                </div> 
+            </div> 
+
+            <div class="col-md-6"> 
+                <div class="d-flex flex-column ps-md-5 px-md-0 px-4 mb-4">
+                    <span>Expiration<span class="ps-1">Month</span></span>
+                    <div class="inputWithIcon">
+                        <input type="text" asp-for="ExpMonth" class="form-control" >
+                        <span class="fas fa-calendar-alt"></span>
+                    </div>
+                    <span asp-validation-for="ExpMonth" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex flex-column ps-md-5 px-md-0 px-4 mb-4">
+                    <span>Code<span class="ps-1">CVV</span></span>
+                    <div class="inputWithIcon">
+                        <input type="password" asp-for="Cvv" class="form-control" >
+                        <span class="fas fa-calendar-alt"></span>
+                    </div>
+                    <span asp-validation-for="Cvv" class="text-danger"></span>
+                </div>
+            </div> 
+            
+            <div class="col-md-6">
+                <div class="d-flex flex-column pe-md-5 px-md-0 px-4 mb-4"> 
+                    <span>Expiration Year</span> <div class="inputWithIcon">
+                        <input type="text" asp-for="ExpYear" class="form-control" /> 
+                        <span class="fas fa-lock"></span> 
+                    </div>
+                </div>
+                <span asp-validation-for="ExpYear" class="text-danger"></span>
+            </div>
+
+            <div class="col-12"> 
+                <div class="d-flex flex-column px-md-5 px-4 mb-4"> 
+                    <span>Name</span>
+                    <div class="inputWithIcon"> 
+                        <input class="form-control text-uppercase" asp-for="CustomerName" type="text">
+                        <span class="far fa-user">
+                        </span> 
+                    </div>
+                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                </div> 
+            </div> 
+                <div class="col-12 px-md-5 px-4 mt-3">
+                        <button type="submit" class="btn btn-primary w-100 text-white">Pay @Convert.ToDecimal(Model.TotalPayment).ToString("C2")</button>
+                </div>
+            </div> 
+        </form> 
+    </div> 
+</div>

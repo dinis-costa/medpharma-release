@@ -1,0 +1,49 @@
+﻿@model Medpharma.Web.Data.Entities.Clerk
+@{
+    ViewData["Title"] = "Details";
+}
+@section Scripts 
+{
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+}
+    <div class="card mb-4">
+        <h5 class="card-header">Clerk Details</h5>
+        <div class="card-body">
+            <div class="d-flex align-items-start align-items-sm-center gap-4">
+
+                <img src="@Url.Content(Model.ImageFullPath)" alt="user-avatar" class="d-block rounded" height="100" width="100" id="output">
+
+            </div>
+        </div>
+        <hr class="my-0">
+
+        <div class="card-body">
+            <form>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">@Html.DisplayNameFor(model => model.FirstName)</label>
+                    <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.FirstName)</label>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">@Html.DisplayNameFor(model => model.LastName)</label>
+                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.LastName)</label>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">@Html.DisplayNameFor(model => model.Document)</label>
+                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Document)</label>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">@Html.DisplayNameFor(model => model.Email)</label>
+                    <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Email)</label>
+                </div>
+                <div class="mb-3">
+                    <a asp-action="Index" class="btn btn-primary">Back</a>
+                </div>
+            </form>
+
+        </div>
+    </div>

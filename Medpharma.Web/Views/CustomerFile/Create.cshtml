@@ -1,0 +1,51 @@
+﻿@model Medpharma.Web.Models.CustomerFileViewModel
+@{
+    ViewData["Title"] = "My Files";
+}
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+    <div class="card mb-4">
+        <h5 class="card-header">Add File</h5>
+        <div class="card-body">
+            <div class="d-flex align-items-start align-items-sm-center gap-4">
+
+            </div>
+        </div>
+
+        <hr class="my-0">
+        <div class="card-body">
+            <form id="form1" asp-action="Create" method="POST" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CustomerId" />
+
+                <div class="row">
+
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="File" class="form-label">Select File</label>
+                        <input asp-for="File" class="form-control" type="file" required>
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="Description" class="form-label">File Description</label>
+                        <input asp-for="Description" type="text" class="form-control" required placeholder="Add description">
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary me-2">Add File</button>
+                <a asp-controller="CustomerFile" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

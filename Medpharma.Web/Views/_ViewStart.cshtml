@@ -1,0 +1,8 @@
+﻿@{
+    Layout = "_Homepage";
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Layout";
+    }
+}

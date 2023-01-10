@@ -1,0 +1,170 @@
+﻿@model Medpharma.Web.Models.MedicalScreeningViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .bg-yellow {
+        background-color: yellow;
+    }
+</style>
+
+<div class="card mb-4">
+        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-white">Medical Screening</h5>
+        </div>
+        <div class="card-body">
+                  <div class="card-body">
+                        <div class="accordion mt-3 mb-3 " id="accordionExample">
+                    <div class="card accordion-item active">
+
+                      <h2 class="accordion-header" id="headingOne">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne">
+                            Patient Details
+                        </button>
+                      </h2>
+
+                      <div id="accordionOne" class="accordion-collapse collapse " data-bs-parent="#accordionExample" style="">
+                        @*START ACCORDION BODY*@
+                          <div class="accordion-body">
+                             
+                            <div class="table-responsive text-nowrap">
+                            <table class="table pt-3 pb-3">
+                                <thead>
+                                    <tr>
+                                        <th class="py-4">admission time </th>
+                                        <th class="py-4" colspan="5">@Html.DisplayFor(model => model.Admission.AdmissionTime)</th>
+                                    </tr>
+                                        <tr class="bg-lighter">
+                                        <th>Full Name</th>
+                                        <th>Citizen ID</th>
+                                        <th>Sex</th>
+                                        <th>DATE OF BIRTH</th>
+                                    </tr>
+                                </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.FullName)</label>
+                                    </td>
+                                          <td>
+                              
+                                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Document)</label>
+                              
+                                          </td>
+                                          <td>
+                              
+                                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Sex)</label>
+                                            </td>
+                                            <td>
+                               
+                                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.DateOfBirth)</label>
+                                            </td>
+                                        </tr>
+                        
+                                                    </tbody>
+                                    </table>
+
+                                    <br />
+
+                            <table class="table">
+                              <thead>
+                                <tr class="bg-lighter">
+                                    <th>Weight</th>
+                                    <th>Height</th>
+                                    <th>Insurance</th>
+                                </tr>
+                              </thead>
+                      <tbody>
+                            <tr>
+                              <td>
+                                <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Weight)</label>
+                              </td>
+                              <td>
+                              
+                                    <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Admission.Customer.Height)</label>
+                              
+                              </td>
+                              <td>
+                                  @if(Model.Admission.Customer.HasInsurance)
+                                  {
+                                     <label class="form-control bg-white" readonly="">YES</label>
+                                  } else
+                                  {
+                                     <label class="form-control bg-white" readonly="">NO</label>
+                                  }
+                                </td>
+                           
+                            </tr>
+                                <tr class="bg-lighter">
+                              <th colspan="5">Relevant Medical Information</th>
+                            </tr>
+                            <tr>
+                              <td  class="text-left" colspan="5">
+                                    <textarea asp-for="Admission.Customer.MedicalInfo" class="form-control bg-white" rows="5" readonly></textarea>
+                                </td>
+                            </tr>
+                            <tr class="bg-lighter">
+                              <th colspan="5">Admission Observation</th>
+                            </tr>
+                            <tr>
+                              <td  class="text-left" colspan="5">
+                                     <textarea asp-for="Admission.Notes" class="form-control bg-white" rows="5" readonly></textarea>
+                                </td>
+                            </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                        </div>
+                        @*END ACCORDION BODY*@
+                      </div>
+                    </div>
+    
+                  </div>
+                  
+                      <form id="form1" method="post" asp-controller="MedicalScreening" asp-action="Create">
+                          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                          <input type="hidden" asp-for="Id" value=""/>
+                          <input type="hidden" asp-for="AdmissionId" value="@Model.Admission.Id" />
+                       
+                      <div class=" form-group mb-3">
+                     
+                        <label asp-for="SId" class="control-label"></label>
+                        <select asp-for="SId" asp-items="Model.Specialities" class="form-select form-select-lg mb-3"></select>
+                        <span asp-validation-for="SId" class="text-danger"></span>
+                        
+                      </div>
+
+                       <div class=" form-group mb-3">
+                     
+                        <label asp-for="PId" class="control-label"></label>
+                        <select asp-for="PId" asp-items="Model.Priorities" class="form-select form-select-lg mb-3"></select>
+                        <span asp-validation-for="PId" class="text-danger"></span>
+                        
+                      </div>
+                       
+                        <div class=" mb-3">
+                          <label class="form-label" for="basic-default-message">Observations</label>
+                          <textarea
+                              asp-for="Observations"
+                              rows="10" style="height:100%;"
+                            id="basic-default-message"
+                            class="form-control"
+                           
+                          ></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                        <a asp-controller="Admission" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                      </form>
+                    </div>
+                  </div>
+           
+  </div>   
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+}

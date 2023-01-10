@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="card">
+    <div class="card-header">
+
+        <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+            <h5 class="card-header mb-0 text-gray-800 my-2">Users</h5>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive text-nowrap">
+
+            <table class="table" id="tableUsers">
+                <thead>
+                    <tr>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">PhoneNumber</th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.FirstName)</strong></td>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.LastName)</strong></td>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.Email)</strong></td>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.PhoneNumber)</strong></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#tableUsers').DataTable();
+        });
+    </script>
+}

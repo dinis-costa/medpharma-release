@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.Order>
+
+
+<div class="card">
+            <div class="card-header">
+
+
+                <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+                    <h5 class="card-header mb-0 text-gray-800 my-2">My Orders</h5>
+                    </div>
+            </div>
+
+ 
+
+ <div class="card-body">
+            <div class=table-responsive text-nowrap">
+
+                <table class="table" id="tableCustomers">
+                    <thead>
+                        <tr>
+                            <th scope="col">Order Nº</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Items</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-border-bottom-0">
+                    @foreach (var order in Model)
+                    {
+                         
+                        <tr>
+
+                             <td>@order.Id</td>
+                            <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                            <td>@order.Lines</td>
+                            <td>@order.CValue.ToString("C2")</td>
+                            <td>
+                                @if(order.OrderSent == 0)
+                                {
+                                    <span class="badge bg-label-warning me-1">Preparing</span>
+                                }
+
+                                @if(order.OrderSent == 1)
+                                {
+                                    <span class="badge bg-label-success me-1">Order Sent</span>
+                                }
+                            </td>
+                             <td>
+                                 <a asp-action="MyOrderDetails" asp-route-orderId="@order.Id" class="btn btn-primary">Order Details</a>
+                                
+                             </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{ 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    }
+
+    <script>
+        $(document).ready( function () {
+            $('#tableCustomers').DataTable();
+            } );
+
+        function openModel(id) {
+            let modal = document.getElementById("largeModal-" + id);
+            
+            if ( modal.style.display === "none") {
+             modal.style.display = "block";
+          } else {
+             modal.style.display = "none";
+          }
+        }
+
+        function closeModal(id) {
+            let modal = document.getElementById("largeModal-" + id);
+            modal.style.display = "none";
+        }
+
+    </script>
+}

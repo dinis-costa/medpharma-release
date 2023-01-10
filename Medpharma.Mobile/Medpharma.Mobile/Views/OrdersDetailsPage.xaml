@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             Title="{Binding Title}"
+             x:Class="Medpharma.Mobile.Views.OrdersDetailsPage">
+
+    <syncfusion:SfListView x:Name="listView" 
+                   ItemsSource="{Binding Order.items}"
+                   ItemSize="125"
+                   BackgroundColor="WhiteSmoke">
+        <syncfusion:SfListView.ItemTemplate>
+            <DataTemplate>
+                <Frame
+                    BorderColor="LightGray"
+                    Margin="3"
+                    CornerRadius="5">
+
+                    <Grid 
+                      BackgroundColor="White"
+                      >
+                        <!--<Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectOrderCommand}" />
+                        </Grid.GestureRecognizers>-->
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ffimageloading:CachedImage
+                                    Grid.Column="0"
+                                    Grid.RowSpan="3"
+                                    Aspect="AspectFit"
+                                    CacheDuration="50"
+                                    RetryCount="3"
+                                    RetryDelay="600"
+                                    Source="{Binding product.imageId, StringFormat='https://medpharma.azurewebsites.net/images/medicine/{0}.jpg'}"
+                                    WidthRequest="100" 
+                        />
+
+                        <Label Grid.Column="1" Text="{Binding product.name}" FontAttributes="Bold" TextColor="#1C375C" FontSize="18" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding quantity, StringFormat='Quantity: {0}'}" TextColor="#1C375C" FontSize="15"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding value, StringFormat='{0:C2}'}" TextColor="#1C375C" FontSize="15"/>
+
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+        </syncfusion:SfListView.ItemTemplate>
+    </syncfusion:SfListView>
+
+</ContentPage>

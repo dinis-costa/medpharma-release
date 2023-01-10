@@ -1,0 +1,564 @@
+﻿@model Medpharma.Web.Models.AppointmentViewModel
+@{
+    ViewData["Title"] = "Appointment";
+}
+@section Scripts
+    {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+
+        //Speciality > Date
+        $(document).ready(function () {
+            $("#SpecialityId").click(function () {
+                $("#Date").val("dd/mm/yyyy");
+                $("#Date").removeAttr("readonly");
+                $("#SelectedTimeslotId").empty();
+                $("#SelectedTimeslotId").append('<option value="0">(Select a Timeslot...)</option>');
+                $("#SelectedTimeslotId").attr("disabled","true");
+                $("#SelectedDoctorId").empty();
+                $("#SelectedDoctorId").append('<option value="0">(Select a Doctor...)</option>');
+                $("#SelectedDoctorId").attr("disabled", "true");
+            })
+        });
+
+        //Date>Timeslots
+        $(document).ready(function () {
+            $("#Date").change(function () {
+                $("#SelectedTimeslotId").empty();
+                $("#SelectedTimeslotId").attr("disabled");
+                $("#SelectedDoctorId").empty();
+                $("#SelectedDoctorId").append('<option value="0">(Select a Doctor...)</option>');
+                $("#SelectedDoctorId").attr("disabled","true");
+                $.ajax({
+                    url: '@Url.Action("GetTimeslotsAsync", "Appointment")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        date: $("#Date").val(),
+                        specialityId : $("#SpecialityId").val(),
+                        apptId : $("#Id").val(),
+                    },
+                    success: function (timeslot) {
+                        $("#SelectedTimeslotId").append('<option value="0">(Select a Timeslot...)</option>');
+                        $("#hiddenTimeslot").remove();
+                        $("#SelectedTimeslotId").removeAttr("disabled");
+                        $.each(timeslot, function (i, s) {
+                            $("#SelectedTimeslotId").append('<option value="'
+                                + s.id + '">'
+                                + s.slot + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve timeslots.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+
+        //Timeslots>Docs
+        $(document).ready(function () {
+            $("#SelectedTimeslotId").change(function () {
+                $("#SelectedDoctorId").empty();
+                $("#SelectedDoctorId").attr("disabled");
+                $.ajax({
+                    url: '@Url.Action("GetDoctorsAsync","Appointment")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        timeslot: $("#SelectedTimeslotId").val(),
+                        date: $("#Date").val(),
+                        specialityId: $("#SpecialityId").val(),
+                        apptId: $("#Id").val(),
+                    },
+
+                    success: function (doctorId) {
+                        $("#SelectedDoctorId").append('<option value="">(Select a Doctor...)</option>');
+                        $("#hiddenDoctor").remove();
+                        $("#SelectedDoctorId").removeAttr("disabled");
+                        $.each(doctorId, function (i, s) {
+                            $("#SelectedDoctorId").append('<option value="'
+                                + s.id + '">'
+                                + s.fullName + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve doctors.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+
+        $(document).ready(function () {
+            $('#tablePrescriptions').DataTable();
+        });
+        
+        $(document).ready(function () {
+            $('#btnShowModal').click(function () {
+                $('#finishModal').modal('show');
+            });
+
+            $('#btnCloseModal').click(function () {
+                $('#finishModal').modal('hide');
+            });
+        });
+
+    </script>
+    }
+
+<div class="card mb-4">
+    <h5 class="card-header bg-primary text-white">Appointment #@Model.Id</h5>
+    <hr class="my-0">
+    <div class="card-body">
+        <form id="form1" asp-action="Edit" method="POST" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CustomerId" />
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row">
+                @if ((User.IsInRole("Customer") || User.IsInRole("Clerk")) && Model.MedicalScreeningId == null)
+                {
+                    @*<input type="hidden" asp-for="SelectedTimeslotId" />
+                    <input type="hidden" asp-for="SelectedDoctorId" />
+                    <input type="hidden" asp-for="SpecialityId" />
+                    <input type="hidden" asp-for="Date" />*@
+
+                    <input type="hidden" asp-for="SelectedDoctorId" id="hiddenDoctor" />
+                    <input type="hidden" asp-for="SelectedTimeslotId" id="hiddenTimeslot" />
+
+                    <div class="row">
+
+                        <div class="mb-3 col-md-4">
+                            <label asp-for="Speciality" class="form-label">Speciality</label>
+                            @Html.DropDownList("SpecialityId", new SelectList((System.Collections.IEnumerable)ViewData["Specialities"], "Id", "Name"), "(Select a Speciality...)", new { @class = "form-select" })
+                            <span asp-validation-for="SpecialityId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 col-md-4">
+                            <label asp-for="Date" class="form-label" id="html5-date-input">Date</label>
+                            <input asp-for="Date" class="form-control" type="date" readonly>
+                            <span asp-validation-for="Date" type="date" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label asp-for="Timeslot" class="form-label">Timeslot</label>
+                            <select asp-for="SelectedTimeslotId" asp-items="Model.TimeslotsList" class="form-select" disabled></select>
+                            <span asp-validation-for="SelectedTimeslotId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 col-md-4">
+                            <label asp-for="SelectedDoctorId" class="form-label">Doctor</label>
+                            <select asp-for="SelectedDoctorId" asp-items="Model.DoctorsList" class="form-select" disabled></select>
+                            <span asp-validation-for="SelectedDoctorId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-8">
+                            <label asp-for="Notes" class="form-label">Notes</label>
+                            <textarea asp-for="Notes" class="form-control bg-white" rows="5"></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.MedicalScreeningId != null && User.IsInRole("Clerk"))
+                {
+                    if (Model.MedicalScreening.IsAccepted == false && User.IsInRole("Doctor"))
+                    {
+                        <input type="hidden" asp-for="DoctorId" />
+                        <input type="hidden" asp-for="SpecialityId" />
+                        <input type="hidden" asp-for="TimeslotId" />
+                        <input type="hidden" asp-for="MedicalScreeningId" />
+
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">PATIENT</label>
+                            <label class="form-control" readonly="">@Html.DisplayFor(model => model.Customer.FullName)</label>
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">@Html.DisplayNameFor(model => model.Speciality)</label>
+                            <label class="form-control" readonly="">@Html.DisplayFor(model => model.Speciality.Name)</label>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">@Html.DisplayNameFor(model => model.Doctor)</label>
+                            <label class="form-control" readonly="">@Html.DisplayFor(model => model.Doctor.FullName)</label>
+                        </div>
+                        <div class="mb-3 col-md-9">
+                            <label asp-for="Notes" class="form-label">Observations</label>
+                            <textarea asp-for="Notes" class="form-control bg-white" rows="3">@Html.DisplayFor(model => model.Notes)</textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+                    }
+                    else if(User.IsInRole("Doctor"))
+                        {
+                <div class="row">
+
+                    <div class="mb-3 col-md-6">
+                       
+                        <label class="form-label">PATIENT</label>
+                        <label class="form-control" readonly="">@Html.DisplayFor(model => model.Customer.FullName)</label>
+                    </div>
+
+                    
+
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="Notes" class="form-label">Observations</label>
+                                <textarea asp-for="Notes" class="form-control bg-white" rows="3">@Html.DisplayFor(model => model.Notes)</textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6 ">
+                        <form method="post">
+                            <button asp-controller="Appointment" asp-action="SaveNotes" asp-route-id="@Model.Id" class="btn btn-sm btn-primary float-end" type="submit">Save</button>
+                        </form>
+                    </div>
+             
+                        
+                </div>
+                <hr />
+                <label class="form-label">Prescriptions</label>
+                <div class="row pt-3">
+                    <div class="pb-4 mb-3 col-md-7">
+                        <a asp-controller="Prescription" asp-action="CreateMedicinePrescription" asp-route-id="@Model.Id" class="btn btn-warning shadow-sm">
+                            <i class='bx bx-plus'></i> Medicine
+                        </a>
+
+                        <a asp-controller="Prescription" asp-action="CreateExamPrescription" asp-route-id="@Model.Id" class="btn btn-info shadow-sm">
+                            <i class='bx bx-plus'></i> Exam
+                        </a>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    @if (Model.PrescriptionList.Any())
+                    {
+                        <table id="tablePrescriptions" class="table table-striped text-nowrap" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Type</th>
+                                    <th>Prescription</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Expiration Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PrescriptionList)
+                                {
+                                    <tr>
+                                        <td>
+                                            #@item.Number
+                                        </td>
+                                        <td>
+                                            @if (item.Exam == null)
+                                            {
+                                                <span class="text-warning">Medicine</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-info">Exam</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Exam == null)
+                                            {
+                                                <span>@item.Medicine.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.Exam.Name</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @item.Quantity
+                                        </td>
+                                        <td class="text-center">
+                                            @item.ExpirationDate.ToShortDateString()
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a asp-controller="Prescription" asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item"><i class='bx bx-pencil me-1'></i> Edit</a>
+                                                    <a asp-controller="Prescription" asp-action="Details" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                    <form method="post">
+                                                        <button asp-controller="Prescription" asp-action="Delete" asp-route-precriptionid="@item.Id" class="dropdown-item"><i class='bx bx-trash me-1'></i> Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                    }
+                </div>
+                }
+                }
+                else if(User.IsInRole("Doctor"))
+                {
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">PATIENT</label>
+                        <label class="form-control bg-white" readonly>@Html.DisplayFor(model => model.Customer.FullName)</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="accordion mt-3 mb-3 " id="accordionExample">
+                            <div class="card accordion-item active">
+                                <h2 class="accordion-header" id="headingOne">
+                            <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne">
+                                Details
+                            </button>
+                            </h2>
+
+                        <div id="accordionOne" class="accordion-collapse collapse " data-bs-parent="#accordionExample" style="">
+                        @*START ACCORDION BODY*@
+                        <div class="accordion-body">
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead class="bg-lighter">
+                                        <tr>
+                                            <th>Full Name</th>
+                                            <th>Citizen ID</th>
+                                            <th>Sex</th>
+                                            <th>DATE OF BIRTH</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Customer.FullName)</label>
+                                                <strong></strong>
+                                            </td>
+                                            <td>
+                                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Customer.Document)</label>
+                                            </td>
+                                            <td>
+                                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Customer.Sex)</label>
+                                            </td>
+                                            <td>
+                                                <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Customer.DateOfBirth)</label>
+                                            </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table">
+                                                <thead class="bg-lighter">
+                                    <tr>
+                                        <th width="33%">Weight</th>
+                                        <th width="33%">Height</th>
+                                        <th width="33%">Insurance</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                        <i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Customer.Weight)</label>
+                                        <strong></strong>
+                                        </td>
+                                        <td>
+                              
+                                            <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Customer.Height)</label>
+                              
+                                        </td>
+                                        <td>
+                                            @if(Model.Customer.HasInsurance)
+                                            {
+                                                <label class="form-control bg-white" readonly="">YES</label>
+                                            } else
+                                            {
+                                                <label class="form-control bg-white" readonly="">NO</label>
+                                            }
+                                        </td>
+                           
+                                    </tr>
+                                    <tr >
+                                        <th colspan="12" class="bg-lighter">Relevant Medical Information</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">
+                                            <textarea asp-for="Customer.MedicalInfo" class="form-control bg-white" rows="3" readonly>@Html.DisplayFor(model => model.Customer.MedicalInfo)</textarea>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @*END ACCORDION BODY*@
+                        </div>
+                    </div>
+                 </div> 
+                    </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="Notes" class="form-label">Observations</label>
+                            <textarea asp-for="Notes" class="form-control bg-white" rows="3">@Html.DisplayFor(model => model.Notes)</textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6 ">
+                        <form method="post">
+                            <button asp-controller="Appointment" asp-action="SaveNotes" asp-route-id="@Model.Id" class="btn btn-sm btn-primary float-end" type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+                <hr />
+                <label class="form-label">Prescriptions</label>
+                <div class="row pt-3">
+                    <div class="pb-4 mb-3 col-md-7">
+                        <a asp-controller="Prescription" asp-action="CreateMedicinePrescription" asp-route-id="@Model.Id" class="btn btn-warning shadow-sm">
+                            <i class='bx bx-plus'></i> Medicine
+                        </a>
+
+                        <a asp-controller="Prescription" asp-action="CreateExamPrescription" asp-route-id="@Model.Id" class="btn btn-info shadow-sm">
+                            <i class='bx bx-plus'></i> Exam
+                        </a>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    @if (Model.PrescriptionList.Any())
+                    {
+                        <table id="tablePrescriptions" class="table table-striped text-nowrap" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Type</th>
+                                    <th>Prescription</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Expiration Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PrescriptionList)
+                                {
+                                    <tr>
+                                        <td>
+                                            #@item.Number
+                                        </td>
+                                        <td>
+                                            @if (item.Exam == null)
+                                            {
+                                                <span class="text-warning">Medicine</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-info">Exam</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Exam == null)
+                                            {
+                                                <span>@item.Medicine.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.Exam.Name</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @item.Quantity
+                                        </td>
+                                        <td class="text-center">
+                                            @item.ExpirationDate.ToShortDateString()
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a asp-controller="Prescription" asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item"><i class='bx bx-pencil me-1'></i> Edit</a>
+                                                    <a asp-controller="Prescription" asp-action="Details" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                    <form method="post">
+                                                        <button asp-controller="Prescription" asp-action="Delete" asp-route-precriptionid="@item.Id" class="dropdown-item"><i class='bx bx-trash me-1'></i> Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                    }
+                </div>
+                }
+            </div>
+
+        @if (User.IsInRole("Customer") || User.IsInRole("Clerk"))
+        { <hr />
+            <div>
+                <a asp-controller="Appointment" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+            </div>
+        }
+        </form>
+    </div>
+
+        @if (User.IsInRole("Doctor"))
+        {
+            <hr />
+            <div class="card-body">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                <button id="btnShowModal" class="btn btn-primary text-white">Finish</button>
+            </div>
+        }
+    
+</div>
+
+@*FINISH APPOINTMENT MODAL*@
+<div class="modal fade" id="finishModal" tabindex="-1" aria-hidden="true" role="dialog" style="display:none">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary" id="exampleModalLabel1">Finish Appointment</h5>
+                <button id="btnCloseModal" type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col mb-3">
+                        <h5>You are about to finish this appointment</h5>
+                        <h6>Are you sure?</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseModal" type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary" aria-label="Close">Cancel</button>
+                <form id="form2" method="post" asp-action="Close">
+                    <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                    <input type="submit" value="Yes, finish" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  

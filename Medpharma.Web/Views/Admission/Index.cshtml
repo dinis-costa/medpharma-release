@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Medpharma.Web.Data.Entities.Admission>
+@section Scripts
+    {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#tableCustomers').DataTable();
+        });
+
+         $(document).ready(function () {
+            var id = 0;
+
+            $("a[id*=btnDeleteItem]").click(function () {
+                //debugger;
+                id = $(this).parent()[0].id;
+                $("#deleteDialog").modal("show");
+                return false;
+            });
+
+            $("#btnNoDelete").click(function () {
+                $("#deleteDialog").modal("hide");
+                return false;
+            });
+
+            $("#btnYesDelete").click(function () {
+                window.location.href = "/Admission/Delete/" + id;
+            });
+        });
+    </script>
+}
+    <div class="card">
+        <div class="card-header">
+
+            <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+                <h5 class="card-header mb-0 text-gray-800 my-2">Admissions</h5>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+
+                <table class="table" id="tableCustomers">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone Number</th>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Customer.Document)</th>
+
+                            @if (User.IsInRole("Doctor") || User.IsInRole("Clerk")){
+                                <th class="text-center">Actions</th>
+                            }
+                        </tr>
+                    </thead>
+
+                    <tbody class="table-border-bottom-0">
+                    @foreach (var item in Model)
+                    {
+                        @if(item.Registered == 0)
+                        {
+                            <tr>
+                            <td>@Html.DisplayFor(modelItem => item.AdmissionTime)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Customer.FullName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Customer.PhoneNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Customer.Document)</td>
+
+                                @if (User.IsInRole("Clerk"))
+                                {
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu" id="@item.Id">
+                                               @* <form asp-action="Delete" asp-controller="Admission" asp-route-id="@item.Id" method="post">*@
+                                                     <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item" id="btnDeleteItem"><i class='bx bx-minus-circle'></i> Cancel</a>
+                                                @*</form>*@
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+
+                            @if (User.IsInRole("Doctor"))
+                            {
+                                    <td class="text-center">
+                                    <a asp-action="Create" asp-controller="MedicalScreening" asp-route-id="@item.Id" class="btn btn-success btn-sm mb-1"><i class="bx bx-user-check me-1"></i> Start Medical Screening</a>
+                                    </td>
+                            } 
+                        </tr>
+                        }
+
+                        @if(item.Registered == 1)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.AdmissionTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Customer.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Customer.PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Customer.Document)</td>
+                                <td>
+                                    <div  class="btn btn-danger text-white btn-sm mb-1"><i class="bx bx-user-check me-1"></i>Registered</div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--Modal-->
+<div id="deleteDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-danger">Cancel Appointment</h4>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-center">Are you sure?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Yes, Cancel</button>
+                <button type="button" class="btn btn-outline-secondary" id="btnNoDelete">No, go back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal-->

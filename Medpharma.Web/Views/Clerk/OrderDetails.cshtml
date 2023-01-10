@@ -1,0 +1,127 @@
+﻿@model Medpharma.Web.Models.OrderDetailsViewModel
+
+
+
+
+<div class="card">
+      <div class="card-header">
+        <div class="d-flex justify-content-between d-sm-flex align-items-center justify-content-between">
+            <h5 class="card-header mb-0 text-gray-800 my-2">Order</h5>
+        </div>
+      </div>
+      <div class="card-body">
+          <div>
+              <div class="card mb-4">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                      <h3 class="mb-0">Invoice data</h3>
+                      
+                    </div>
+                    <div class="card-body">
+                      
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Name</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-fullname2" class="input-group-text"><i class="bx bx-user"></i></span>
+                              <input readonly type="text" class="form-control bg-white" id="basic-icon-default-fullname" value="@Model.Customer.FullName" aria-label="John Doe" aria-describedby="basic-icon-default-fullname2">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-default-name">Document</label>
+                          <div class="col-sm-10">
+                            <input type="text" value="@Model.Customer.Document" class="form-control bg-white" id="basic-default-name" readonly>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 col-form-label" for="basic-icon-default-email">Email</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                              <input readonly type="text" id="basic-icon-default-email" class="form-control bg-white" value="@Model.Customer.UserName"  aria-label="john.doe" aria-describedby="basic-icon-default-email2">
+                              <span id="basic-icon-default-email2" class="input-group-text"></span>
+                            </div>
+                            
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 form-label" for="basic-icon-default-phone">Phone No</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-phone2" class="input-group-text"><i class="bx bx-phone"></i></span>
+                              <input readonly type="text" id="basic-icon-default-phone" class="form-control phone-mask bg-white" value="@Model.Customer.PhoneNumber" aria-label="658 799 8941" aria-describedby="basic-icon-default-phone2">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-2 form-label" for="basic-icon-default-phone">Address</label>
+                          <div class="col-sm-10">
+                            <div class="input-group input-group-merge">
+                              <span id="basic-icon-default-company2" class="input-group-text"><i class="bx bx-buildings"></i></span>
+                              <input readonly type="text" id="basic-icon-default-phone" class="form-control  bg-white" value="@Model.Customer.Address" aria-describedby="basic-icon-default-phone2">
+                            </div>
+                          </div>
+                        </div>
+                       
+                       
+
+                
+                
+                <div style="margin-top:100px;" class="table-responsive text-nowrap">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Prescription</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Value</th>
+                     
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        
+                            @foreach (var medicine in Model.OrderDetailList)
+                            {
+                               
+                                <tr>
+                                 <td>
+                                       <img width="50" src="@medicine.Product.ImageFullPath">
+                                   </td>
+                                   <td>@medicine.Product.Name</td>
+                                   <td>
+                                    @if(@medicine.Product.NeedsPrescription)
+                                    {
+                                        <p style="font-size: 10px" class="badge bg-label-danger">Required</p>                                             
+                                    }
+                                   </td>
+                                   <td>@medicine.Product.Price.ToString("C2")</td>
+                                   <td>@medicine.Quantity</td>
+                                   <td>@medicine.Value.ToString("C2")</td>
+                                 
+                                </tr>
+                           }
+                     
+                     
+                    </tbody>
+                  </table>     
+                </div>
+            
+                     <div class="d-grid gap-2 col-lg-6 mx-auto" style="margin-top:100px;">
+                         @if(@Model.OrderSent == 1)
+                        {
+                            <button disabled  class="btn btn-warning btn-lg" type="button">Confirmed</button>
+                        } else
+                        {
+                            <a  asp-action="ConfirmOrder" asp-route-orderId="@Model.OrderId" class="btn btn-primary btn-lg" type="button">Confirm Order</a>
+                        }
+
+                         
+                        </div>
+                   
+                    </div>
+                  </div>
+          </div>
+      </div>
+</div>

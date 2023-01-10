@@ -1,0 +1,699 @@
+﻿@model Medpharma.Web.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+
+<div class="content-wrapper">
+    <!-- Content -->
+
+        <div class="row">
+            <div class="col-lg-12 mb-4 order-0">
+                <div class="card">
+                    <div class="d-flex align-items-end row">
+                        <div class="col-sm-7">
+                            <div class="card-body">
+                            <h5 class="card-title text-primary">Hello, @User.FindFirst("UserFullName").Value!</h5>
+                                <p class="mb-4">
+                                    Welcome to your <strong>Medpharma</strong> personal area.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-5 text-center text-sm-left">
+                            <div class="card-body pb-0 px-0 px-md-4">
+                                <img src="../assets/img/illustrations/man-with-laptop-light.png"
+                                     height="140"
+                                     alt="View Badge User"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-lg-12 col-md-4 order-1">
+                <div class="row">
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/user-gray.png"
+                                         alt="chart success"
+                                         class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0"
+                                            type="button"
+                                            id="cardOpt3"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" asp-action="ListUsers" asp-controller="Account">View All</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Users</span>
+                                <h3 class="card-title mb-2">@Model.TotalUsers.ToString()</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/customer.png"
+                                         alt="chart success"
+                                         class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0"
+                                            type="button"
+                                            id="cardOpt3"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" asp-action="Index" asp-controller="Customer">View All</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Clients</span>
+                                <h3 class="card-title mb-2">@Model.TotalClients.ToString()</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/doctor.png"
+                                         alt="chart success"
+                                         class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0"
+                                            type="button"
+                                            id="cardOpt3"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" asp-action="Index" asp-controller="Doctor">View All</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Doctors</span>
+                                <h3 class="card-title mb-2">@Model.TotalDoctors.ToString()</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/clerk.png"
+                                         alt="chart success"
+                                         class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0"
+                                            type="button"
+                                            id="cardOpt3"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" asp-action="Index" asp-controller="Clerk">View All</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Clerks</span>
+                                <h3 class="card-title mb-2">@Model.TotalClerks.ToString()</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Revenue -->
+        <!-- Total Revenue -->
+        <div class="col-md-6 col-lg-8 col-xl-8 order-0 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                    <div class="card-title mb-0">
+                        <h5 class="m-0 me-2"><i class='bx bxs-analyse'></i> Financial Data</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            <h2 class="mb-2 pt-4">@Model.TotalRevenue.ToString("c2")</h2>
+                            <span>Total Amount</span>
+                        </div>
+                    </div>
+                    <ul class="pt-4 p-0 m-0">
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="avatar flex-shrink-0 me-3">
+                                <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
+                            </div>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Appointments Revenue</h6>
+                                </div>
+                                <div class="user-progress">
+                                    <h4 class="fw-semibold">@Model.TotalAppointmentsRevenue.ToString("c2")</h4>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="avatar flex-shrink-0 me-3">
+                                <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
+                            </div>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Orders Revenue</h6>
+                                </div>
+                                <div class="user-progress">
+                                    <h4 class="fw-semibold">@Model.TotalOrdersRevenue.ToString("c2")</h4>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--/ Total Revenue -->
+            <!--/ Total Revenue -->
+
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                            <div class="card-title mb-0">
+                                <h5 class="m-0 me-2"><i class='bx bx-package'></i> Orders Statistics</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex flex-column align-items-center gap-1">
+                                    <h2 class="mb-2 pt-4">@Model.TotalOrders.ToString()</h2>
+                                    <span>Total Orders</span>
+                                </div>
+                            </div>
+                            <ul class="p-0 m-0">
+                                <li class="d-flex mb-4 pb-1">
+                                    <div class="avatar flex-shrink-0 me-3">
+                                        <span class="avatar-initial rounded bg-label-primary">
+                                            <i class='bx bx-file'></i>
+                                        </span>
+                                    </div>
+                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                        <div class="me-2">
+                                            <h6 class="mb-0">Prescribed Medicines</h6>
+                                        </div>
+                                        <div class="user-progress">
+                                            <small class="fw-semibold">@Model.TotalMedicinesSoldWithPrescription.ToString()</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="d-flex mb-4 pb-1">
+                                    <div class="avatar flex-shrink-0 me-3">
+                                        <span class="avatar-initial rounded bg-label-success"><i class='bx bxs-capsule'></i></span>
+                                    </div>
+                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                        <div class="me-2">
+                                            <h6 class="mb-0">Non Prescribed</h6>
+                                        </div>
+                                        <div class="user-progress">
+                                            <small class="fw-semibold">@Model.TotalMedicinesSoldWithoutPrescription.ToString()</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--/ Order Statistics -->
+                
+                    <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                                <div class="card-title mb-0">
+                                    <h5 class="m-0 me-2"><i class='bx bx-plus-medical' ></i> Pharmacy Inventory</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="d-flex flex-column align-items-center gap-1">
+                                        <h2 class="mb-2 pt-4">@Model.TotalProducts.ToString()</h2>
+                                        <span>Total Products</span>
+                                    </div>
+                                </div>
+                                <ul class="p-0 m-0">
+                                    <li class="d-flex mb-4 pb-1">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <span class="avatar-initial rounded bg-label-danger">
+                                                <i class='bx bxs-book-alt'></i>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">Prescription Required</h6>
+                                            </div>
+                                            <div class="user-progress">
+                                                <small class="fw-semibold">@Model.TotalMedicinesWithPrescription.ToString()</small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex mb-4 pb-1">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <span class="avatar-initial rounded bg-label-warning"><i class='bx bx-band-aid'></i></span>
+                                        </div>
+                                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">Prescription Not Required</h6>
+                                            </div>
+                                            <div class="user-progress">
+                                                <small class="fw-semibold">@Model.TotalMedicinesWithoutPrescription.ToString()</small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        }
+
+        @if (User.IsInRole("Clerk") && Model.WareHouse == false)
+        {
+
+            <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Today's Appointments</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-nowrap">
+                            <table class="table" id="tableAppointments">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Patient</th>
+                                        <th scope="col">Doctor</th>
+                                        <th scope="col">Speciality</th>
+                                        <th scope="col">Time</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    @foreach (var item in Model.Appointments)
+                                    {
+                                        <tr>
+                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.Customer.FullName)</strong></td>
+                                            <td>@Html.DisplayFor(modelItem => item.Doctor.FullName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Speciality.Name)</td>
+
+                                            @if (item.MedicalScreeningId != null)
+                                            {
+                                                <td class="text-center">
+                                                    <span class="badge bg-label-info text-info">EMERGENCY</span>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">
+                                                    @Html.DisplayFor(modelItem => item.Timeslot.Slot)
+                                                </td>
+                                            }
+                                            @*<td>@Html.DisplayFor(modelItem => item.Timeslot.Slot)</td>*@
+                                            @if (!item.Finished)
+                                            {
+                                                <td class="text-center">
+                                                    <span class="badge bg-label-warning text-warning">SCHEDULED</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+
+                                                            <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                            <a asp-action="Edit" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                            <a asp-action="Delete" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-minus-circle me-1"></i> Cancel</a>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            }
+                                            @if (item.Finished)
+                                            {
+                                                @if (!item.IsPaid)
+                                                {
+                                                <td class="text-center">
+                                                    <span class="badge bg-label-info text-info">PENDING PAYMENT</span>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+
+                                                            <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                            <a asp-action="Index" asp-controller="Stripe" asp-route-appointmentId="@item.Id" asp-route-totalPayment="@item.Price" asp-route-origin="4" class="dropdown-item"><i class="bx bx-wallet me-1"></i> Payment</a>
+                                                            <a asp-action="Appointment" asp-controller="CustomerFile" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-file me-1"></i> Files</a>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                }
+                                                else if (item.IsPaid)
+                                                {
+                                                    <td class="text-center">
+                                                        <span class="badge bg-label-success text-success">COMPLETED</span>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <div class="dropdown">
+                                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                                <a asp-action="Appointment" asp-controller="CustomerFile" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-file me-1"></i> Files</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Admissions</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-nowrap">
+                            <table class="table" id="tableAdmissions">
+                                <thead>
+                                    <tr>
+                                        <td>Time</td>
+                                        <td>Customer</td>
+                                        <th>Document</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    @foreach (var item in Model.Admissions)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.AdmissionTime)</td>
+                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.Customer.FullName)</strong></td>
+                                            <td>@Html.DisplayFor(modelItem => item.Customer.Document)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+        @if (User.IsInRole("Clerk") && Model.WareHouse == true)
+        {
+            <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Orders</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive text-nowrap">
+                            <table class="table" id="tableAdmissions">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Order Nº</th>
+                                        <th scope="col">Date</th>
+                                        @*<th scope="col">Items</th>
+                                        <th>Payment</th>*@
+                                        <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    @foreach (var order in Model.Orders)
+                                    {
+                                        <tr>
+                                            <td>@order.Id</td>
+                                            <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                                            @*<td>@order.Lines</td>
+                                            <td>@order.CValue</td>*@
+                                            <td class="text-center">
+                                                @if (order.OrderSent == 0)
+                                                {
+                                                    <span class="badge bg-label-warning me-1">Preparing</span>
+                                                }
+
+                                                @if (order.OrderSent == 1)
+                                                {
+                                                    <span class="badge bg-label-success me-1">Order Sent</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a asp-action="OrderDetails" asp-controller="Clerk" asp-route-orderId="@order.Id" class="btn btn-primary">Order Details</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (User.IsInRole("Doctor"))
+        {
+             <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
+
+                 <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-4">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Today's Appointments</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-nowrap">
+                            <table class="table" id="tableDoctors">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Patient</th>
+                                    <th class="text-center">Time</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    @foreach (var item in Model.Appointments)
+                                    {
+                                        <tr>
+                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@Html.DisplayFor(modelItem => item.Customer.FullName)</strong></td>
+
+                                            @if (item.MedicalScreeningId != null)
+                                            {
+                                                <td class="text-center">
+                                                    <span class="badge bg-label-info text-info">EMERGENCY</span>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">
+                                                    @Html.DisplayFor(modelItem => item.Timeslot.Slot)
+                                                </td>
+                                            }
+
+                                            @*<td class="text-center">@Html.DisplayFor(modelItem => item.Timeslot.Slot)</td>*@
+
+                                            @if (!item.Finished)
+                                            {
+                                                <td class="text-center">
+                                                    <a asp-action="Edit" asp-controller="Appointment" asp-route-id="@item.Id" class="btn btn-success"> START </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+
+                                                            <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+@*                                                          <a asp-action="Delete" asp-controller="Appointment" asp-route-id="@item.Id" class="dropdown-item"><i class="bx bx-minus-circle me-1"></i> Cancel</a>
+*@
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">
+                                                    <span class="badge bg-label-danger text-danger">FINISHED</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+
+                                                            <a asp-action="Details" asp-controller="Appointment" asp-route-id="@item.Id " class="dropdown-item"><i class="bx bx-detail me-1"></i> Details</a>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+             </div>
+        }
+       
+        @if (User.IsInRole("Customer"))
+        {
+            <div class="container-fluid d-flex justify-content-center">
+            <div class="col-md-6 col-lg-4 col-xl-7 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">Emergency Service</h5>
+                            <small class="text-muted"><i class='bx bxs-hourglass'></i> Average waiting time</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center mb-3 pt-4">
+                            <div class="d-flex flex-column align-items-center ml-3 col-md-6">
+                                <h2 class="mb-2">42 min</h2>
+                                <h4>Adults</h4>
+                            </div>
+                            <div class="d-flex flex-column align-items-center ml-3 col-md-6">
+                                <h2 class="mb-2">28 min</h2>
+                                <h4>Pediatrics</h4>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            // TABLE DE ORDERS
+
+            <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2 pb-5">My Orders</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive text-nowrap">
+                            <table class="table" id="tableCustomerOrders">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No. #</th>
+                                        <th scope="col">Ordered</th>
+                                    <th scope="col" class="text-center" >Status</th>
+                                        <th scope="col">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    @foreach (var item in Model.OrdersByCustomer)
+                                    {
+                                        <tr>
+                                            <td>@item.Id.ToString()</td>
+                                            <td>@item.OrderDate</td>
+                                        <td class="text-center">
+                                            @if (item.OrderSent == 0)
+                                            {
+                                                <span class="badge bg-label-warning me-1">Preparing</span>
+                                            }
+
+                                            @if (item.OrderSent == 1)
+                                            {
+                                                <span class="badge bg-label-success me-1">Order Sent</span>
+                                            }
+                                        </td>
+                                            <td>@item.CValue.ToString("c2")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+</div>
+<!-- / Content -->
+
+@section Scripts{
+    <script src="~/js/alert.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tableAppointments').DataTable();
+        });
+
+        $(document).ready(function () {
+            $('#tableAdmissions').DataTable();
+        });
+
+        $(document).ready(function () {
+            $('#tableOrders').DataTable();
+        });
+
+        $(document).ready(function () {
+            $('#tableDoctors').DataTable();
+        });
+
+        $(document).ready(function () {
+            $('#tableCustomerOrders').DataTable();
+        });
+    </script>
+}

@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             Title="{Binding Title}"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="Medpharma.Mobile.Views.AppointmentsPage">
+
+    <StackLayout
+           >
+        
+        <SearchBar Placeholder="Search Appointments..."
+                      SearchCommand="{Binding _searchCommand}" Text="{Binding Search}"/>
+
+        <syncfusion:SfListView x:Name="listView" 
+                   ItemsSource="{Binding Appointments}"
+                   ItemSize="130"
+                   BackgroundColor="WhiteSmoke">
+
+            <syncfusion:SfListView.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                    BorderColor="LightGray"
+                    Margin="3"
+                    CornerRadius="5">
+
+                        <Grid 
+                      BackgroundColor="White"
+                      >
+                            <Grid.GestureRecognizers>
+                                <!--<TapGestureRecognizer Command="{Binding SelectAppointmentCommand}" />-->
+                            </Grid.GestureRecognizers>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!--<ffimageloading:CachedImage
+                                    Grid.Column="0"
+                                    Grid.RowSpan="2"
+                                    Aspect="AspectFit"
+                                    CacheDuration="50"
+                                    RetryCount="3"
+                                    RetryDelay="600"
+                                    Source="{Binding product.imageFullPath}"
+                                    WidthRequest="100" 
+                        />-->
+                            <Label Grid.Row="1" Text="{Binding date.Date, StringFormat='{0:MMMM dd, yyyy}'}" FontAttributes="Bold" TextColor="#1C375C" FontSize="18" />
+
+                            <Label Grid.Row="2" Text="{Binding timeSlot}" FontAttributes="Bold" TextColor="#1C375C" FontSize="16" />
+                            <Label Grid.Row="3" Text="{Binding doctor}" FontAttributes="Bold" TextColor="#1C375C" FontSize="16" />
+                            <Label Grid.Row="3" Grid.Column="2" Text="{Binding speciality}" FontAttributes="Bold" TextColor="#1C375C" FontSize="16" />
+
+
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </syncfusion:SfListView.ItemTemplate>
+        </syncfusion:SfListView>
+
+    </StackLayout>
+
+    <!--<StackLayout
+            Padding="5"
+           >
+        <SearchBar Placeholder="Search Product..."
+                  SearchCommand="{Binding _searchCommand}" Text="{Binding Search}"/>
+
+        <CollectionView ItemsSource="{Binding Appointments}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectAppointmentCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            
+                            --><!--<ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />--><!--
+                            
+                        </Grid.ColumnDefinitions>
+                        --><!--<ffimageloading:CachedImage
+                                Grid.Column="0"
+                                Margin="5"
+                                Aspect="AspectFill"
+                                CacheDuration="50"
+                                RetryCount="3"
+                                RetryDelay="600"
+                                Source="{Binding ThumbnailUrl}"
+                                WidthRequest="100" />--><!--
+                        <StackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label
+                                    FontAttributes="Bold"
+                                    FontSize="Medium"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding speciality}" />
+
+
+
+
+                        </StackLayout>
+                        --><!--<Image Grid.Column="2" Source="ic_more_vert" />--><!--
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>-->
+
+</ContentPage>

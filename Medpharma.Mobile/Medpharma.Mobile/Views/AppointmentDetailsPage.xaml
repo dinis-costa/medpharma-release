@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="Medpharma.Mobile.Views.AppointmentDetailsPage">
+
+    <ScrollView>
+        <StackLayout Padding="10">
+            <!--<ffimageloading:CachedImage
+                        Aspect="AspectFill"
+                        CacheDuration="50"
+                        RetryCount="3"
+                        RetryDelay="600"
+                        Source="{Binding Product.ThumbnailUrl}"
+                        WidthRequest="200" />-->
+
+            <Grid Padding="10,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+
+
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="{Binding Appointment.date}" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Appointment.timeSlot}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="{Binding Appointment.speciality}" />
+
+            </Grid>
+
+
+
+            <!--<Button
+                BackgroundColor="Navy"
+                Command="{Binding AddToCartBinding}"
+                CornerRadius="10"
+                Text="AddToCart"
+                TextColor="White"
+                VerticalOptions="EndAndExpand" />-->
+        </StackLayout>
+    </ScrollView>
+
+
+</ContentPage>

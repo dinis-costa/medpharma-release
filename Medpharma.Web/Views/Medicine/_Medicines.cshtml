@@ -1,0 +1,52 @@
+﻿@model Medpharma.Web.Models.MedicineViewModel
+
+<div class="row">
+
+    <div class="mb-4 col-md-4">
+        <label asp-for="Name" class="form-label">Name</label>
+        <input asp-for="Name" type="text" class="form-control">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="mb-4 col-md-2">
+        <label asp-for="Description" class="form-label">Description</label>
+        <input asp-for="Description" type="text" class="form-control">
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4 col-md-3" style="padding-top: 35px;">
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="NeedsPrescription" /> @Html.DisplayNameFor(model => model.NeedsPrescription)
+            </label>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+
+    <div class="mb-4 col-md-2">
+        <label asp-for="Price" class="form-label">Price</label>
+        <input asp-for="Price" type="text" class="form-control">
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4 col-md-2">
+        <label asp-for="Stock" class="form-label">Stock (Units)</label>
+        <input asp-for="Stock" type="text" class="form-control">
+        <span asp-validation-for="Stock" class="text-danger"></span>
+    </div>
+
+
+
+</div>
+
+
+
+

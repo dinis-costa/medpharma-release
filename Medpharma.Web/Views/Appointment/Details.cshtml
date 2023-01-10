@@ -1,0 +1,70 @@
+﻿@model Medpharma.Web.Data.Entities.Appointment
+@{
+    ViewData["Title"] = "Details";
+}
+@section Scripts
+    {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
+    <div class="card mb-4">
+        <h5 class="card-header bg-primary text-white">Appointment Details</h5>
+        <hr class="my-0">
+
+        <div class="card-body">
+            <form>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="mb-3 col-md-8">
+                        <label class="form-label">Patient</label>
+                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Customer.FullName)</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">@Html.DisplayNameFor(model => model.Speciality)</label>
+                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Speciality.Name)</label>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">@Html.DisplayNameFor(model => model.Date)</label>
+                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Date)</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">@Html.DisplayNameFor(model => model.Timeslot)</label>
+                        @if(Model.Timeslot != null)
+                        {
+                        <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Timeslot.Slot)</label>
+                        } else
+                        {
+                        <label class="form-control bg-white" readonly="">EMERGENCY</label>
+                        }
+
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">@Html.DisplayNameFor(model => model.Doctor)</label>
+                    <label class="form-control bg-white" readonly="">@Html.DisplayFor(model => model.Doctor.FullName)</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-8">
+                        <label class="form-label">@Html.DisplayNameFor(model => model.Notes)</label>
+                    <textarea class="form-control bg-white" readonly="" rows="5">@Html.DisplayFor(model => model.Notes)</textarea>
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <a asp-controller="Appointment" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                    @if (!User.IsInRole("Doctor"))
+                    {
+                        <a asp-controller="Appointment" asp-action="Edit" asp-route-id="@Model.Id" type="submit" class="btn btn-primary me-2">Edit</a>
+                    }
+                </div>
+            </form>
+
+        </div>
+    </div>

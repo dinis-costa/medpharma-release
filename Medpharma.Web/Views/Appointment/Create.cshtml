@@ -1,0 +1,151 @@
+﻿@model Medpharma.Web.Models.AppointmentViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+
+        //Speciality > Date
+        $(document).ready(function () {
+            $("#SpecialityId").change(function () {
+                $("#Date").val("dd/mm/yyyy");
+                $("#Date").removeAttr("disabled");
+                $("#SelectedTimeslotId").empty();
+                $("#SelectedTimeslotId").append('<option value="0">(Select a Timeslot...)</option>');
+                $("#SelectedTimeslotId").attr("disabled","true");
+                $("#SelectedDoctorId").empty();
+                $("#SelectedDoctorId").append('<option value="0">(Select a Doctor...)</option>');
+                $("#SelectedDoctorId").attr("disabled","true");
+            })
+        });
+
+        //Date>Timeslots
+        $(document).ready(function () {
+            $("#Date").change(function () {
+                $("#SelectedTimeslotId").empty();
+                $("#SelectedTimeslotId").attr("disabled");
+                $("#SelectedDoctorId").empty();
+                $("#SelectedDoctorId").append('<option value="0">(Select a Doctor...)</option>');
+                $("#SelectedDoctorId").attr("disabled","true");
+                $.ajax({
+                    url: '@Url.Action("GetTimeslotsAsync", "Appointment")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        date: $("#Date").val(),
+                        specialityId : $("#SpecialityId").val()
+                    },
+                    success: function (timeslot) {
+                        $("#SelectedTimeslotId").append('<option value="0">(Select a Timeslot...)</option>');
+                        $("#SelectedTimeslotId").removeAttr("disabled");
+                        $.each(timeslot, function (i, s) {
+                            $("#SelectedTimeslotId").append('<option value="'
+                                + s.id + '">'
+                                + s.slot + '</option>');
+                        });
+                        $("#SelectedDoctorId").attr("disabled");
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve timeslots.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+
+        //Timeslots>Doctors
+        $(document).ready(function () {
+            $("#SelectedTimeslotId").change(function () {
+                $("#SelectedDoctorId").empty();
+                $("#SelectedDoctorId").attr("disabled");
+                $.ajax({
+                    url: '@Url.Action("GetDoctorsAsync","Appointment")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        timeslot: $("#SelectedTimeslotId").val(),
+                        date: $("#Date").val(),
+                        specialityId: $("#SpecialityId").val()
+                    },
+
+                    success: function (doctorId) {
+                        $("#SelectedDoctorId").append('<option value="">(Select a Doctor...)</option>');
+                        $("#SelectedDoctorId").removeAttr("disabled");
+                        $.each(doctorId, function (i, s) {
+                            $("#SelectedDoctorId").append('<option value="'
+                                + s.id + '">'
+                                + s.fullName + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve doctors.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+
+
+
+    </script>
+
+}
+    <div class="card mb-4">
+        <h5 class="card-header bg-primary text-white">New Appointment</h5>
+        
+        <hr class="my-0">
+        <div class="card-body">
+            <form id="form1" asp-action="Create" method="POST" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CustomerId" />
+            
+            <div class="row">
+
+                <div class="mb-3 col-md-4">
+                    <label asp-for="Speciality" class="form-label">Speciality</label>
+                    @Html.DropDownList("SpecialityId", new SelectList((System.Collections.IEnumerable)ViewData["Specialities"], "Id", "Name"), "(Select a Speciality...)", new { @class = "form-select" })
+                    <span asp-validation-for="SpecialityId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 col-md-4">
+                    <label asp-for="Date" class="form-label" id="html5-date-input">Date</label>
+                    <input asp-for="Date"  class="form-control" type="date" value="dd/mm/yyyy" disabled>
+                    <span asp-validation-for="Date" type="date" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label asp-for="Timeslot" class="form-label">Timeslot</label>
+                    <select asp-for="SelectedTimeslotId" asp-items="Model.TimeslotsList" class="form-select" disabled><option selected disabled>(Select a Timeslot...)</option></select>
+                    <span asp-validation-for="SelectedTimeslotId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 col-md-4">
+                    <label asp-for="SelectedDoctorId" class="form-label">Doctor</label>
+                    <select asp-for="SelectedDoctorId" asp-items="Model.DoctorsList" class="form-select" disabled><option selected disabled>(Select a Doctor...)</option></select>
+                    <span asp-validation-for="SelectedDoctorId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-8">
+                    <label asp-for="Notes" class="form-label">Notes</label>
+                    <textarea asp-for="Notes" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary me-2">Create</button>
+                <a asp-controller="Appointment" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+             

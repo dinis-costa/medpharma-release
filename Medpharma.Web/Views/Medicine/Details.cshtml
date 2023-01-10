@@ -1,0 +1,64 @@
+﻿@model Medpharma.Web.Data.Entities.Medicine
+@{
+    ViewData["Title"] = "Medicine";
+}
+@section Scripts
+    {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
+    <div class="card mb-4">
+        <h5 class="card-header">Product Details</h5>
+        <div class="card-body">
+            <div class="d-flex align-items-start align-items-sm-center gap-4">
+                <img src="@Url.Content(Model.ImageFullPath)" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar">
+            </div>
+        </div>
+        <hr class="my-0">
+        <div class="card-body">
+            <form id="formAccountSettings" asp-action="Edit" method="POST" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="row">
+                        <div class="mb-4 col-md-4">
+                            <label asp-for="Name" class="form-label">Name</label>
+                            <input asp-for="Name" type="text" class="form-control bg-white" readonly disabled>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-4 col-md-2">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <input asp-for="Description" type="text" class="form-control bg-white" readonly disabled>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="mb-4 col-md-3" style="padding-top: 35px;">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="NeedsPrescription" readonly disabled /> @Html.DisplayNameFor(model => model.NeedsPrescription)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-4 col-md-2">
+                            <label asp-for="Price" class="form-label">Price</label>
+                            <input asp-for="Price" type="text" class="form-control bg-white" readonly disabled>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4 col-md-2">
+                            <label asp-for="Stock" class="form-label">Stock (Units)</label>
+                            <input asp-for="Stock" type="text" class="form-control bg-white" readonly disabled>
+                            <span asp-validation-for="Stock" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <a asp-controller="Medicine" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                    <a asp-controller="Medicine" asp-action="Edit" asp-route-id="@Model.Id" type="submit" class="btn btn-primary me-2">Edit</a>
+                </div>
+            </form>
+        </div>
+    </div>
